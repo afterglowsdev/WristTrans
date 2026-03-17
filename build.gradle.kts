@@ -60,9 +60,11 @@ dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.wear:wear:1.3.0")
-    implementation("androidx.wear.compose:compose-material3:1.1.0")
+    // 1.1.0 does not exist on Maven; use an existing Wear Compose Material3 version.
+    implementation("androidx.wear.compose:compose-material3:1.0.0-alpha22")
     implementation("androidx.compose.ui:ui:1.6.1")
     implementation("androidx.compose.material:material:1.6.1")
+    implementation("androidx.compose.material3:material3:1.2.1")
     implementation("androidx.compose.ui:ui-tooling-preview:1.6.1")
     implementation("androidx.wear.compose:compose-foundation:1.2.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
