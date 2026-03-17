@@ -1,2 +1,10 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# GitHub Actions runs on Linux; keep wrapper shell script LF + executable.
+gradlew text eol=lf
+
+.github/workflows/*.yml text eol=lf
+.github/workflows/*.yaml text eol=lf
+gradle/wrapper/gradle-wrapper.properties text eol=lf
+*.bat text eol=crlf
