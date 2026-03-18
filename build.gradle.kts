@@ -57,6 +57,8 @@ android {
 }
 
 dependencies {
+    // Provides Theme.Material3.* and related theme attrs used by XML styles.
+    implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.wear:wear:1.3.0")

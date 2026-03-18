@@ -41,8 +41,8 @@ import androidx.wear.compose.material3.ChipDefaults
 import androidx.wear.compose.material3.CircularProgressIndicator
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.TitleCard
-import work.czzzz.wisttrans.network.NetworkModule
-import work.czzzz.wisttrans.ui.WristTransTheme
+import work.czzzz.wristtrans.network.NetworkModule
+import work.czzzz.wristtrans.ui.WristTransTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
