@@ -1,6 +1,7 @@
 package work.czzzz.wristtrans
 
 import android.app.RemoteInput
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -39,25 +40,41 @@ import androidx.wear.compose.material3.ScreenScaffold
 import androidx.wear.compose.material3.Text
 import androidx.wear.compose.material3.TitleCard
 import androidx.wear.input.RemoteInputIntentHelper
+import work.czzzz.wristtrans.ui.AndroidCompatTheme
+import work.czzzz.wristtrans.ui.AndroidDeviceRoute
 import work.czzzz.wristtrans.ui.WristTransTheme
 import work.czzzz.wristtrans.ui.WristTransViewModel
 import work.czzzz.wristtrans.ui.model.TranslationHistoryItem
+import work.czzzz.wristtrans.ui.model.TranslationUiState
+import work.czzzz.wristtrans.ui.model.languageLabel
 
 private const val RemoteInputKey = "translation_text"
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val supportsWearRemoteInput =
+            packageManager.resolveActivity(
+                RemoteInputIntentHelper.createActionRemoteInputIntent(),
+                PackageManager.MATCH_DEFAULT_ONLY,
+            ) != null
+
         setContent {
-            WristTransTheme {
-                WristTransRoute()
+            if (supportsWearRemoteInput) {
+                WristTransTheme {
+                    WearRoute()
+                }
+            } else {
+                AndroidCompatTheme {
+                    AndroidDeviceRoute()
+                }
             }
         }
     }
 }
 
 @Composable
-private fun WristTransRoute(
+private fun WearRoute(
     viewModel: WristTransViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -119,7 +136,7 @@ private fun WristTransRoute(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
                 item {
-                    LanguageSwitcher(
+                    WearLanguageSwitcher(
                         sourceLanguage = uiState.sourceLanguage,
                         targetLanguage = uiState.targetLanguage,
                         onSourceClick = viewModel::toggleSourceLanguage,
@@ -137,7 +154,7 @@ private fun WristTransRoute(
                 }
                 if (uiState.history.isEmpty()) {
                     item {
-                        HistoryCard(
+                        WearHistoryCard(
                             item =
                                 TranslationHistoryItem(
                                     id = "empty",
@@ -151,7 +168,7 @@ private fun WristTransRoute(
                     }
                 } else {
                     items(uiState.history, key = { it.id }) { item ->
-                        HistoryCard(item = item)
+                        WearHistoryCard(item = item)
                     }
                 }
             }
@@ -161,14 +178,12 @@ private fun WristTransRoute(
 
 @Composable
 private fun InputCard(
-    uiState: work.czzzz.wristtrans.ui.model.TranslationUiState,
+    uiState: TranslationUiState,
     onClick: () -> Unit,
 ) {
     OutlinedCard(
         onClick = onClick,
-        modifier =
-            Modifier
-                .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.outlinedCardColors(),
     ) {
         Text(
@@ -195,9 +210,7 @@ private fun InputCard(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             if (uiState.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.height(16.dp),
-                )
+                CircularProgressIndicator(modifier = Modifier.height(16.dp))
             }
         }
         Spacer(modifier = Modifier.height(6.dp))
@@ -209,19 +222,13 @@ private fun InputCard(
                     else -> uiState.lastTranslation
                 },
             style = MaterialTheme.typography.bodyMedium,
-            color =
-                if (uiState.errorMessage != null) {
-                    MaterialTheme.colorScheme.error
-                } else {
-                    MaterialTheme.colorScheme.onSurface
-                },
+            color = if (uiState.errorMessage != null) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface,
             maxLines = 4,
             overflow = TextOverflow.Ellipsis,
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text =
-                "${stringResource(R.string.detected_source)}: ${languageLabel(uiState.detectedLanguage ?: uiState.sourceLanguage)}",
+            text = "${stringResource(R.string.detected_source)}: ${languageLabel(uiState.detectedLanguage ?: uiState.sourceLanguage)}",
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -229,7 +236,7 @@ private fun InputCard(
 }
 
 @Composable
-private fun LanguageSwitcher(
+private fun WearLanguageSwitcher(
     sourceLanguage: String,
     targetLanguage: String,
     onSourceClick: () -> Unit,
@@ -292,7 +299,7 @@ private fun LanguageSwitcher(
 }
 
 @Composable
-private fun HistoryCard(item: TranslationHistoryItem) {
+private fun WearHistoryCard(item: TranslationHistoryItem) {
     TitleCard(
         onClick = {},
         modifier =
@@ -333,11 +340,3 @@ private fun HistoryCard(item: TranslationHistoryItem) {
         )
     }
 }
-
-private fun languageLabel(code: String): String =
-    when (code.lowercase()) {
-        "auto" -> "AUTO"
-        "en" -> "EN"
-        "zh-cn", "zh" -> "ZH"
-        else -> code.uppercase()
-    }

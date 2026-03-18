@@ -3,7 +3,7 @@
 
     <uses-feature
         android:name="android.hardware.type.watch"
-        android:required="true" />
+        android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -27,4 +27,3 @@
     </application>
 
 </manifest>
-
