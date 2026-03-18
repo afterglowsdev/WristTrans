@@ -1,7 +1,7 @@
 package work.czzzz.wristtrans.data.model
 
 data class TranslateQuery(
-    val q: String,
+    val text: String,
     val to: String = "zh-CN",
     val from: String = "auto",
 )
@@ -12,4 +12,3 @@ data class TranslationResponse(
     val translated: String,
     val from: String,
 )
-

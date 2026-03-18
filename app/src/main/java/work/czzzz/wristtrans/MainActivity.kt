@@ -53,14 +53,16 @@ private const val RemoteInputKey = "translation_text"
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val isWatchDevice = packageManager.hasSystemFeature(PackageManager.FEATURE_WATCH)
         val supportsWearRemoteInput =
             packageManager.resolveActivity(
                 RemoteInputIntentHelper.createActionRemoteInputIntent(),
                 PackageManager.MATCH_DEFAULT_ONLY,
             ) != null
+        val useWearUi = isWatchDevice && supportsWearRemoteInput
 
         setContent {
-            if (supportsWearRemoteInput) {
+            if (useWearUi) {
                 WristTransTheme {
                     WearRoute()
                 }

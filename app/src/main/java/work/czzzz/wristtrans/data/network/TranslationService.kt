@@ -7,9 +7,8 @@ import work.czzzz.wristtrans.data.model.TranslationResponse
 interface TranslationService {
     @GET("/")
     suspend fun translate(
-        @Query("q") query: String,
+        @Query("text") text: String,
         @Query("to") targetLanguage: String = "zh-CN",
         @Query("from") sourceLanguage: String = "auto",
     ): TranslationResponse
 }
-

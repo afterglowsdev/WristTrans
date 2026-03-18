@@ -38,7 +38,7 @@ class WristTransViewModel : ViewModel() {
         viewModelScope.launch {
             runCatching {
                 service.translate(
-                    query = trimmed,
+                    text = trimmed,
                     targetLanguage = targetLanguage,
                     sourceLanguage = sourceLanguage,
                 )
