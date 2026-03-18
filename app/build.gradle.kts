@@ -87,12 +87,12 @@ android {
 
 dependencies {
     implementation("androidx.core:core-ktx:1.15.0")
-    implementation("androidx.activity:activity-compose:1.10.1")
+    implementation("androidx.activity:activity-compose:1.13.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
-    implementation("androidx.wear.compose:compose-foundation:1.5.0")
-    implementation("androidx.wear.compose:compose-material3:1.5.0")
+    implementation("androidx.wear.compose:compose-foundation:1.5.6")
+    implementation("androidx.wear.compose:compose-material3:1.5.6")
     implementation("androidx.wear:wear-input:1.2.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")

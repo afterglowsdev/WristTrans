@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,7 +15,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.weight
+import androidx.compose.foundation.layout.calculateBottomPadding
+import androidx.compose.foundation.layout.calculateTopPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -37,6 +37,7 @@ import androidx.wear.compose.material3.ListHeader
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.OutlinedButton
 import androidx.wear.compose.material3.OutlinedCard
+import androidx.wear.compose.material3.ScreenScaffold
 import androidx.wear.compose.material3.Text
 import androidx.wear.compose.material3.TitleCard
 import androidx.wear.input.RemoteInputIntentHelper
@@ -66,6 +67,7 @@ private fun WristTransRoute(
     val inputHint = stringResource(R.string.input_hint)
     val inputTitle = stringResource(R.string.input_title)
     val confirmLabel = stringResource(R.string.confirm_input)
+    val cancelLabel = stringResource(R.string.cancel_input)
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val text =
@@ -87,69 +89,72 @@ private fun WristTransRoute(
                 .build()
         val intent =
             RemoteInputIntentHelper.createActionRemoteInputIntent().apply {
-                RemoteInputIntentHelper.putRemoteInputsExtra(this, arrayListOf(remoteInput))
+                RemoteInputIntentHelper.putRemoteInputsExtra(this, listOf(remoteInput))
                 RemoteInputIntentHelper.putTitleExtra(this, inputTitle)
                 RemoteInputIntentHelper.putConfirmLabelExtra(this, confirmLabel)
+                RemoteInputIntentHelper.putCancelLabelExtra(this, cancelLabel)
             }
         launcher.launch(intent)
     }
 
     AppScaffold {
-        ScalingLazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            state = listState,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            contentPadding =
-                PaddingValues(
-                    start = 12.dp,
-                    end = 12.dp,
-                    top = 20.dp,
-                    bottom = 28.dp,
-                ),
-        ) {
-            item {
-                InputCard(
-                    uiState = uiState,
-                    onClick = openInput,
-                )
-            }
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-            item {
-                LanguageSwitcher(
-                    sourceLanguage = uiState.sourceLanguage,
-                    targetLanguage = uiState.targetLanguage,
-                    onSourceClick = viewModel::toggleSourceLanguage,
-                    onTargetClick = viewModel::toggleTargetLanguage,
-                    onSwapClick = viewModel::swapLanguages,
-                )
-            }
-            item {
-                Spacer(modifier = Modifier.height(10.dp))
-            }
-            item {
-                ListHeader(modifier = Modifier.fillMaxWidth()) {
-                    Text(text = stringResource(R.string.history_label))
-                }
-            }
-            if (uiState.history.isEmpty()) {
+        ScreenScaffold(scrollState = listState) { scaffoldPadding ->
+            ScalingLazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                state = listState,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                contentPadding =
+                    PaddingValues(
+                        start = 12.dp,
+                        end = 12.dp,
+                        top = 20.dp + scaffoldPadding.calculateTopPadding(),
+                        bottom = 28.dp + scaffoldPadding.calculateBottomPadding(),
+                    ),
+            ) {
                 item {
-                    HistoryCard(
-                        item =
-                            TranslationHistoryItem(
-                                id = "empty",
-                                original = stringResource(R.string.empty_history),
-                                translated = stringResource(R.string.input_hint),
-                                from = uiState.sourceLanguage,
-                                to = uiState.targetLanguage,
-                                createdAt = "--:--",
-                            ),
+                    InputCard(
+                        uiState = uiState,
+                        onClick = openInput,
                     )
                 }
-            } else {
-                items(uiState.history, key = { it.id }) { item ->
-                    HistoryCard(item = item)
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                item {
+                    LanguageSwitcher(
+                        sourceLanguage = uiState.sourceLanguage,
+                        targetLanguage = uiState.targetLanguage,
+                        onSourceClick = viewModel::toggleSourceLanguage,
+                        onTargetClick = viewModel::toggleTargetLanguage,
+                        onSwapClick = viewModel::swapLanguages,
+                    )
+                }
+                item {
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
+                item {
+                    ListHeader(modifier = Modifier.fillMaxWidth()) {
+                        Text(text = stringResource(R.string.history_label))
+                    }
+                }
+                if (uiState.history.isEmpty()) {
+                    item {
+                        HistoryCard(
+                            item =
+                                TranslationHistoryItem(
+                                    id = "empty",
+                                    original = stringResource(R.string.empty_history),
+                                    translated = stringResource(R.string.input_hint),
+                                    from = uiState.sourceLanguage,
+                                    to = uiState.targetLanguage,
+                                    createdAt = "--:--",
+                                ),
+                        )
+                    }
+                } else {
+                    items(uiState.history, key = { it.id }) { item ->
+                        HistoryCard(item = item)
+                    }
                 }
             }
         }
@@ -161,18 +166,12 @@ private fun InputCard(
     uiState: work.czzzz.wristtrans.ui.model.TranslationUiState,
     onClick: () -> Unit,
 ) {
-    val colors =
-        CardDefaults.outlinedCardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
-            contentColor = MaterialTheme.colorScheme.onSurface,
-        )
-
     OutlinedCard(
+        onClick = onClick,
         modifier =
             Modifier
-                .fillMaxWidth()
-                .clickable(onClick = onClick),
-        colors = colors,
+                .fillMaxWidth(),
+        colors = CardDefaults.outlinedCardColors(),
     ) {
         Text(
             text = stringResource(R.string.input_label),
