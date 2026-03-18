@@ -61,11 +61,15 @@ android {
 dependencies {
     // Provides Theme.Material3.* and related theme attrs used by XML styles.
     implementation("com.google.android.material:material:1.11.0")
+    // Required for ComponentActivity.setContent { ... }.
+    implementation("androidx.activity:activity-compose:1.9.2")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.wear:wear:1.3.0")
+    implementation("androidx.wear:wear-input:1.2.0")
     // 1.1.0 does not exist on Maven; use an existing Wear Compose Material3 version.
-    implementation("androidx.wear.compose:compose-material3:1.0.0-alpha22")
+    // Need >= alpha24 for AppScaffold and updated APIs.
+    implementation("androidx.wear.compose:compose-material3:1.0.0-alpha24")
     implementation("androidx.compose.ui:ui:1.6.1")
     implementation("androidx.compose.material:material:1.6.1")
     implementation("androidx.compose.material3:material3:1.2.1")

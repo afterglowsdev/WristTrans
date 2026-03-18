@@ -1,11 +1,8 @@
 package work.czzzz.wristtrans.ui
 
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.wear.compose.material3.MaterialTheme as WearMaterialTheme
-import androidx.wear.compose.material3.lightColorScheme as wearLightColorScheme
-import androidx.compose.material3.ColorScheme
+import androidx.wear.compose.material3.darkColorScheme
 import androidx.compose.ui.graphics.Color
 
 // 自定义颜色方案
