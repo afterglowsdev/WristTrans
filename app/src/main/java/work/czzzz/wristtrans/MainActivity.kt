@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.calculateBottomPadding
-import androidx.compose.foundation.layout.calculateTopPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -98,7 +96,7 @@ private fun WristTransRoute(
     }
 
     AppScaffold {
-        ScreenScaffold(scrollState = listState) { scaffoldPadding ->
+        ScreenScaffold(scrollState = listState) {
             ScalingLazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 state = listState,
@@ -107,8 +105,8 @@ private fun WristTransRoute(
                     PaddingValues(
                         start = 12.dp,
                         end = 12.dp,
-                        top = 20.dp + scaffoldPadding.calculateTopPadding(),
-                        bottom = 28.dp + scaffoldPadding.calculateBottomPadding(),
+                        top = 20.dp,
+                        bottom = 28.dp,
                     ),
             ) {
                 item {
