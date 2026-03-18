@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WristTrans</string>
+    <string name="input_label">输入文本</string>
+    <string name="input_hint">点击打开系统键盘</string>
+    <string name="translation_label">翻译结果</string>
+    <string name="history_label">历史记录</string>
+    <string name="swap_label">切换语言</string>
+    <string name="confirm_input">翻译</string>
+    <string name="input_title">输入要翻译的内容</string>
+    <string name="cancel_input">取消</string>
+    <string name="empty_history">暂时还没有历史记录</string>
+    <string name="empty_translation">翻译结果会显示在这里</string>
+    <string name="translating">翻译中…</string>
+    <string name="detected_source">检测源语言</string>
+    <string name="toggle_source">切换源语言</string>
+    <string name="toggle_target">切换目标语言</string>
+</resources>
+

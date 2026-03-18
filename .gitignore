@@ -1,0 +1,12 @@
+*.iml
+.gradle/
+.idea/
+build/
+local.properties
+captures/
+.DS_Store
+*.jks
+*.p12
+KEYSTORE_BASE64.txt
+GITHUB_SECRETS_CONFIG.txt
+
